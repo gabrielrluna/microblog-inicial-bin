@@ -2,7 +2,7 @@
 CREATE TABLE usuarios(
     id SMALLINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(45) NOT NULL,
-    email VARCHAR(45) NOT NULL,
+    email VARCHAR(45) NOT NULL UNIQUE,
     senha VARCHAR (255) NOT NULL,
     tipo ENUM('admin','editor') NOT NULL UNIQUE
 )
@@ -10,21 +10,21 @@ CREATE TABLE usuarios(
 
 ```sql
 CREATE TABLE noticias(
-    id MEDIUMINT NOT NULL PRIMARY KEY AUTO_INCREMENT, VARCHAR(45) NOT NULL,
-    data DATETIME,
+    id MEDIUMINT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+    data DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     titulo VARCHAR(150) NOT NULL,
     texto TEXT NOT NULL,
     resumo TINYTEXT NOT NULL,
-    imagem VARCHAR(45),
+    imagem VARCHAR(45) NOT NULL,
     destaque ENUM('sim','nao'),
     usuarios_id SMALLINT NULL,
-    categorias_id TINYINT NULL
+    categorias_id SMALLINT NULL
 )
 ```
 
 ```sql
 CREATE TABLE categorias(
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id SMALLINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(45) NOT NULL
 )
 ```
@@ -32,13 +32,14 @@ CREATE TABLE categorias(
 
 ALTER TABLE noticias
     ADD CONSTRAINT fk_noticias_usuarios
-
     FOREIGN KEY (usuarios_id) REFERENCES usuarios(id)
+    ON DELETE SET NULL ON UPDATE NO ACTION;
 ```
 ```sql
 
 ALTER TABLE noticias
     ADD CONSTRAINT fk_noticias_categorias
-
     FOREIGN KEY (categorias_id) REFERENCES categorias(id)
+    ON DELETE SET NULL ON UPDATE NO ACTION;
+
 ```
