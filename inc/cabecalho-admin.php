@@ -7,6 +7,9 @@ $sessao = new ControleDeAcesso;
 // Executamos verificaAcesso para checar se tem alguém logado 
 $sessao->verificaAcesso();
 
+// Se o parametro "?sair" existir, entao faça o logout
+if(isset($_GET['sair'])) $sessao->logout();
+
 
 $pagina = basename($_SERVER['PHP_SELF']);
 ?>
@@ -36,6 +39,9 @@ $pagina = basename($_SERVER['PHP_SELF']);
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <?php
+        if($_SESSION['tipo'] == 'admin'){
+            ?>
             <li class="nav-item">
                 <a class="nav-link" href="index.php">Home</a>
             </li>
@@ -56,9 +62,34 @@ $pagina = basename($_SERVER['PHP_SELF']);
                 <a class="nav-link" href="../index.php" target="_blank">Área pública</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link fw-bold" href=""> <i class="bi bi-x-circle"></i> Sair</a>
+                <a class="nav-link fw-bold" href="?sair"> <i class="bi bi-x-circle"></i> Sair</a>
             </li>
+
+            <?php
+        } else {
+            ?>
+
+            <li class="nav-item">
+                <a class="nav-link" href="index.php">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="meu-perfil.php">Meu perfil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="noticias.php">Notícias</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../index.php" target="_blank">Área pública</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fw-bold" href="?sair"> <i class="bi bi-x-circle"></i> Sair</a>
+            </li>
+
+          <?php
+            }
+            ?>
         </ul>
+
 
     </div>
   </div>

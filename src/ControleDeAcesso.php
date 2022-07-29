@@ -19,6 +19,13 @@ final class ControleDeAcesso{
             header("location:../login.php?acesso_proibido");
             die(); //exit
         }
+        
+    }
+
+    public function verificaAcessoAdmin():void{
+        if($_SESSION['tipo'] != 'admin'){
+            header("location:nao-autorizado.php");
+        }
     }
     
     public function login(int $id, string $nome, string $tipo):void{
@@ -26,5 +33,12 @@ final class ControleDeAcesso{
         $_SESSION ['id'] = $id;
         $_SESSION ['nome'] = $nome;
         $_SESSION ['tipo'] = $tipo;
+    }
+
+    public function logout():void{
+        session_start();
+        session_destroy();
+        header("location:../login.php?logout");
+        exit;
     }
 }

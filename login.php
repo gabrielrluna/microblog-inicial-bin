@@ -1,14 +1,19 @@
 <?php 
 use Microblog\Usuario;
+use Microblog\ControleDeAcesso;
 require_once "inc/cabecalho.php";
 
 // Mensagem de feedback relacionada ao acesso 
-if(isset($_GET['acesso_proibido'])){
+if( isset($_GET['acesso_proibido'])){
 	$feedback = "Você deve logar primeiro!";
-} elseif (isset($_GET['campos_obrigatorios'])) {
+} elseif ( isset($_GET['campos_obrigatorios'])) {
 	$feedback = 'Você deve preencher os dois campos!';
-} elseif (isset($_GET['nao_encontrado'])){
+} elseif ( isset($_GET['nao_encontrado'])){
 	$feedback = 'Usuário não encontrado';
+} elseif ( isset($_GET['senha_incorreta'])){
+	$feedback = 'Senha Incorreta!';
+} elseif ( isset($_GET['logout'])){
+	$feedback = 'Você saiu do sistema';
 }
 ?>
 
@@ -44,7 +49,7 @@ if(isset($_GET['acesso_proibido'])){
 <?php
 // Verificação de campos do formulário
 if (isset($_POST['entrar'])){
-if(isset($_POST['email']) || empty($_POST['senha'])){
+if(empty($_POST['email']) || empty($_POST['senha'])){
 	header("location:login.php?campos_obrigatorios");
 } else {
 	// Capturamos o email informado
@@ -54,15 +59,19 @@ if(isset($_POST['email']) || empty($_POST['senha'])){
 	// Buscando um usuario no banco a partir do email 
 	$dados = $usuario->buscar();
 // if($dados === false)
-	if (!dados)	{
+	if (!$dados)	{
 		// echo "nao tem ninguém nessa bagaça!";
 		header ("location:login.php?nao_encontrado");
 	} else {
 		// Verificação de senha e login
 		if(password_verify($_POST['senha'], $dados['senha'])){
-			echo" o fulano pde entrar";
+			//Estando certa, será feito o login
+			$sessao = new ControleDeAcesso;
+			$sessao->login($dados['id'], $dados['nome'], $dados['tipo']);
+			header("location:admin/index.php");
 		} else {
-			echo "cai fora";
+			// Caso contrário, mantenha na página login e apresente uma mensagem
+			header ("location:login.php?senha_incorreta");
 		}
 	}
 }

@@ -1,7 +1,13 @@
 <?php 
 use Microblog\Usuario;
 use Microblog\Utilitarios;
+use Microblog\ControleDeAcesso;
+
 require_once "../inc/cabecalho-admin.php";
+
+
+$sessao = new ControleDeAcesso;
+$sessao->verificaAcessoAdmin();
 
 $usuario = new Usuario;
 $usuario->setId($_GET['id']);
@@ -25,7 +31,7 @@ if(isset($_POST['atualizar'])){
 	}
 
 	$usuario->atualizar();
-	header("locaation:usuarios.php");
+	header("location:usuarios.php");
 }
 
 ?>

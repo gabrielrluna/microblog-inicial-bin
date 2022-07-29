@@ -1,5 +1,12 @@
 <?php 
+use Microblog\ControleDeAcesso;
 require_once "../inc/cabecalho-admin.php";
+
+// Criamos o objetio para acessar os recursos de sessao PHP na classe ControleDeAcesso
+$sessao = new ControleDeAcesso;
+// Executamos verificaAcesso para checar se tem alguém logado 
+$sessao->verificaAcessoAdmin();
+
 ?>
 
 

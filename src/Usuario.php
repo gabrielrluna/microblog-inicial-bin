@@ -94,7 +94,7 @@ final class Usuario{
                 $resultado = $consulta->fetch(PDO::FETCH_ASSOC);               
             } catch (Exception $erro){
                 die("Erro:". $erro->getMessage());
-            }
+            } return $resultado;
         }
 
     public function codificaSenha(string $senha):string{
