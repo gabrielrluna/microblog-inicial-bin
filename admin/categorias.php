@@ -1,5 +1,6 @@
 <?php 
 use Microblog\ControleDeAcesso;
+use Microblog\Categoria;
 require_once "../inc/cabecalho-admin.php";
 
 // Criamos o objetio para acessar os recursos de sessao PHP na classe ControleDeAcesso
@@ -7,6 +8,8 @@ $sessao = new ControleDeAcesso;
 // Executamos verificaAcesso para checar se tem alguém logado 
 $sessao->verificaAcessoAdmin();
 
+$categoria = new Categoria;
+$listaDeCategorias = $categoria->listarCategorias();
 ?>
 
 
@@ -34,22 +37,22 @@ $sessao->verificaAcessoAdmin();
 				</thead>
 
 				<tbody>
-
+				<?php foreach($listaDeCategorias as $categorias){ ?>
 					<tr>
-						<td> Nome... </td>
+						<td> <?= $categorias['nome']?> </td>
 						<td class="text-center">
 							<a class="btn btn-warning" 
-							href="categoria-atualiza.php">
+							href="categoria-atualiza.php?id=<?=$categorias['id'] ?>">
 							<i class="bi bi-pencil"></i> Atualizar
 							</a>
 						
 							<a class="btn btn-danger excluir" 
-							href="categoria-exclui.php">
+							href="categoria-exclui.php?id=<?=$categorias['id'] ?>">
 							<i class="bi bi-trash"></i> Excluir
 							</a>
 						</td>
 					</tr>
-
+				<?php } ?>
 				</tbody>                
 			</table>
 	    </div>
