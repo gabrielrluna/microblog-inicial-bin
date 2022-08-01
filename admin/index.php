@@ -1,18 +1,33 @@
 <?php 
 use Microblog\Usuario;
 require_once "../inc/cabecalho-admin.php";
+
+if( isset($_GET['perfil-atualizado'])){
+	$feedback = "Perfil atualizado com sucesso!";
+}
+
+$usuario = new Usuario;
+$usuario->setId($_SESSION['id']);
+$dados=$usuario->listarUm();
+
 ?>
 
 
 
 <article class="p-5 my-4 rounded-3 bg-white shadow">
     <div class="container-fluid py-1">        
-        <h2 class="display-4">Olá <?=$_SESSION['nome']?>!</h2>
+        <h2 class="display-4">Olá <?=$dados['nome']?>!</h2>
         <p class="fs-5">Você está no <b>painel de controle e administração</b> do
 		site Microblog e seu <b>nível de acesso</b> é <span class="badge bg-dark"> <?=$_SESSION['tipo']?> </span>.</p>
         <hr class="my-4">
 
         <?php
+
+            if(isset($feedback)){?>
+				<p class="my-2 alert alert-warning text-center">
+				<?= $feedback?> <i class="bi bi-x-circle-fill"></i> </p>
+                <?php } 
+
         if($_SESSION['tipo'] == 'admin'){
             ?>
             <div class="d-grid gap-2 d-md-block text-center">
