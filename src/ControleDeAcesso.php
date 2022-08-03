@@ -41,4 +41,14 @@ final class ControleDeAcesso{
         header("location:../login.php?logout");
         exit;
     }
+
+    public function expirar():void{
+        session_start();
+        if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > 10)) {
+            session_unset(); 
+            session_destroy(); 
+            echo "session destroyed"; 
+        }
+        $_SESSION['start'] = time();
+    }
 }

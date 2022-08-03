@@ -8,6 +8,7 @@ final class Usuario{
     private string $email;
     private string $senha;
     private string $tipo;
+    private PDO $conexao;
 
     //O método construtor funciona no momento em que o objeto é criado
     public function __construct()
@@ -160,7 +161,10 @@ final class Usuario{
         $this->tipo = filter_var($tipo, FILTER_SANITIZE_SPECIAL_CHARS);
     }
 
-
+    public function getConexao(): PDO
+    {
+        return $this->conexao;
+    }
 
 }
 
