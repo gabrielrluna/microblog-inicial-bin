@@ -34,7 +34,7 @@ final class Noticia{
             $consulta->bindParam(":resumo",$this->resumo, PDO::PARAM_STR);
             $consulta->bindParam(":imagem",$this->imagem, PDO::PARAM_STR);
             $consulta->bindParam(":destaque",$this->destaque, PDO::PARAM_STR);
-            $consulta->bindParam(":categorias_id",$this->categoriaID, PDO::PARAM_INT);
+            $consulta->bindParam(":categorias_id",$this->categoriaId, PDO::PARAM_INT);
             $consulta->bindValue(":usuarios_id",$this->usuario->getId(), PDO::PARAM_INT);
             
             // BINDVALUE: Aqui, primeiro chamamos o getter de ID a partir do objeto/classe de Usuario. E só depois atribuimos ele ao parâmetro :usuario_id usando para isso o bindValue. Obs.: bindParam pode ser usado, mas há riscos de erro devido a forma como ele é executado pelo PHP. Por isso, recomenda-se o uso do bindValue em situações como essa.
@@ -75,7 +75,15 @@ final class Noticia{
 
 
     public function listar(){
-        $sql = "SELECT id, data, titulo, texto, resumo, imagem, destaque, categoriaId FROM noticias ORDER BY data";
+        if($this->usuario->getTipo() === 'admin'){
+            // Então ele poderá acessar as notícias de todo mundo
+            $sql = "SELECT id, data, titulo, texto, resumo, imagem, destaque, categorias_id FROM noticias ORDER BY data";
+       } else {
+        // Senão (ou seja, ele é um editor), este usuário (editor) poderá acessar somente suas próprias notícias
+        $sql = "SELECT id, data, titulo, texto, resumo, imagem, destaque, categorias_id FROM noticias ORDER BY data WHERE   ";
+
+       }
+
     
 
     try {

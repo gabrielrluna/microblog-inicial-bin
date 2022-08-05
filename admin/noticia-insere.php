@@ -14,7 +14,8 @@ if(isset($_POST['inserir'])){
 	$noticia->setResumo($_POST['resumo']);
 	$noticia->setDestaque($_POST['destaque']);
 	$noticia->setCategoriaId($_POST['categoria']);
-
+	$noticia->usuario->setId($_SESSION['id']);
+	
 	// Capturando os dados do arquivo enviado
 	$imagem = $_FILES["imagem"];
 
@@ -24,10 +25,12 @@ if(isset($_POST['inserir'])){
 	// Enviamos para o setter (e para o banco) SOMENTE a parte que se refere ao nome;extensão do arquivo 
 	$noticia->setImagem($imagem['name']);
 
+	$noticia->inserir();
+	header("location:noticias.php");
 	// Utilitarios::dump($imagem);
 
 	// Aplicamos o ID do usuário logado na sessão à propriedade ID da classe/objeto usuário
-	$noticia->usuario->setId($_SESSION['id']);
+
 
 
 

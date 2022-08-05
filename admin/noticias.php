@@ -1,5 +1,20 @@
 <?php 
+use Microblog\Noticia;
+use Microblog\ControleDeAcesso;
+use Microblog\Categoria;
+use Microblog\Usuario;
 require_once "../inc/cabecalho-admin.php";
+
+$sessao = new ControleDeAcesso;
+$noticia = new Noticia;
+$categoria = new Categoria;
+$usuario = new Usuario;
+// Capturando o ID e o tipo do usuário logado e associando estes valores às propriedades do objeto "Usuário"
+$noticia->usuario->setId($_SESSION['id']);
+$noticia->usuario->setTipo($_SESSION['tipo']);
+
+$listaDeNoticias = $noticia->listar();
+$listaDeUsuarios = $usuario->listar();
 ?>
 
 
@@ -29,11 +44,11 @@ require_once "../inc/cabecalho-admin.php";
 				</thead>
 
 				<tbody>
-
+				<?php foreach($listaDeNoticias as $noticias){ ?>
 					<tr>
-                        <td> Título da notícia... </td>
-                        <td> 21/12/2112 21:12 </td>
-                        <td> Autor da notícia... </td>
+                        <td> <?= $noticias['titulo']?> </td>
+                        <td> <?= $noticias['data']?> </td>
+                        <td> <?= $_SESSION['nome']?> </td>
 						<td class="text-center">
 							<a class="btn btn-warning" 
 							href="noticia-atualiza.php">
@@ -46,7 +61,8 @@ require_once "../inc/cabecalho-admin.php";
 							</a>
 						</td>
 					</tr>
-
+					</tr>
+				<?php } ?>
 				</tbody>                
 			</table>
 	</div>
