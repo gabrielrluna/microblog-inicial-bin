@@ -46,7 +46,32 @@ final class Noticia{
         }
     }
 
+    public function upload (array $arquivo){
+        // Definindo os formatos aceitos
+        $tiposValidos = [
+            "image/png", "image/jpeg", "image/gif", "image/svg+xml"];
 
+        if(!in_array($arquivo['type'],$tiposValidos)){
+            die("
+                <script>
+                alert('Formato inválido!!');
+                history.back();                
+                </script>"
+
+            );
+        }
+        // Acessando apenas o nome do arquivo
+        $nome = $arquivo['name'];
+        // Acessando os dados de acesso temporário
+        $temporario = $arquivo['tmp_name'];
+        // Definindo a pasta de destino junto com o nome do arquivo
+        $destino = "../imagem/".$nome;
+
+        //Usamos a função abaixo para pegar da área temporária e enviar para a pasta de destino (com o nome do arquivo)
+        move_uploaded_file($temporario, $destino);
+
+
+    }
 
 
     public function listar(){
