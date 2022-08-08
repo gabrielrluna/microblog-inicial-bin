@@ -1,20 +1,16 @@
 <?php 
 use Microblog\Noticia;
-use Microblog\ControleDeAcesso;
-use Microblog\Categoria;
-use Microblog\Usuario;
+use Microblog\Utilitarios;        
 require_once "../inc/cabecalho-admin.php";
 
-$sessao = new ControleDeAcesso;
 $noticia = new Noticia;
-$categoria = new Categoria;
-$usuario = new Usuario;
+
 // Capturando o ID e o tipo do usuário logado e associando estes valores às propriedades do objeto "Usuário"
 $noticia->usuario->setId($_SESSION['id']);
 $noticia->usuario->setTipo($_SESSION['tipo']);
-
 $listaDeNoticias = $noticia->listar();
-$listaDeUsuarios = $usuario->listar();
+// Utilitarios::dump ($listaDeNoticias);
+// die ();
 ?>
 
 
@@ -22,7 +18,7 @@ $listaDeUsuarios = $usuario->listar();
 	<article class="col-12 bg-white rounded shadow my-1 py-4">
 		
 		<h2 class="text-center">
-		Notícias <span class="badge bg-dark">X</span>
+		Notícias <span class="badge bg-dark"><?= count($listaDeNoticias)?></span>
 		</h2>
 
 		<p class="text-center mt-5">
@@ -38,7 +34,9 @@ $listaDeUsuarios = $usuario->listar();
 					<tr>
                         <th>Título</th>
                         <th>Data</th>
-                        <th>Autor</th>
+						<?php if ($_SESSION['tipo'] === 'admin'){?><th>Autor</th>
+                        <th>Destaque</th>
+						<?php } ?>
 						<th class="text-center">Operações</th>
 					</tr>
 				</thead>
@@ -47,11 +45,17 @@ $listaDeUsuarios = $usuario->listar();
 				<?php foreach($listaDeNoticias as $noticias){ ?>
 					<tr>
                         <td> <?= $noticias['titulo']?> </td>
-                        <td> <?= $noticias['data']?> </td>
-                        <td> <?= $_SESSION['nome']?> </td>
+                        <td> <?= Utilitarios::formataData($noticias['data'])?> </td>
+						<?php if ($_SESSION ['tipo'] === 'admin'){?>
+						<!-- ?? = Operador de Coalescência Nula
+						Na prática, o valor à esquerda é exibido (caso exista).
+						Caso contrário, o valor à direita é exibido-->
+                        <td> <?= $noticias['autor'] ?? "<i>Equipe Microblog</i>" ?> </td>
+                        <td> <?= $noticias['destaque']?> </td>
+						<?php } ?>
 						<td class="text-center">
 							<a class="btn btn-warning" 
-							href="noticia-atualiza.php">
+							href="noticia-atualiza.php?id=<?=$noticias['id']?>">
 							<i class="bi bi-pencil"></i> Atualizar
 							</a>
 						

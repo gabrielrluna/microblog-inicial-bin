@@ -74,20 +74,20 @@ final class Noticia{
     }
 
 
-    public function listar(){
+    public function listar():array {
         if($this->usuario->getTipo() === 'admin'){
             // Então ele poderá acessar as notícias de todo mundo
-            $sql = "SELECT id, data, titulo, texto, resumo, imagem, destaque, categorias_id FROM noticias ORDER BY data";
+            $sql = "SELECT noticias.id, noticias.data, noticias.titulo, noticias.destaque, usuarios.nome AS autor FROM noticias LEFT JOIN usuarios ON noticias.usuarios_id = usuarios.id  ORDER BY data DESC";
        } else {
         // Senão (ou seja, ele é um editor), este usuário (editor) poderá acessar somente suas próprias notícias
-        $sql = "SELECT id, data, titulo, texto, resumo, imagem, destaque, categorias_id FROM noticias ORDER BY data WHERE   ";
-
+        $sql = "SELECT id, data, titulo, destaque FROM noticias WHERE usuarios_id = :usuarios_id ORDER BY data";
        }
-
-    
-
     try {
         $consulta = $this->conexao->prepare($sql);
+        // Se não for um usuário admin, então trate o parâmetro de usuarios_id
+        if($this->usuario->getTipo()!== 'admin'){
+            $consulta->bindValue(":usuarios_id",$this->usuario->getId(), PDO::PARAM_INT);
+        }
         $consulta->execute();
         $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
     } catch (Exception $erro) {
