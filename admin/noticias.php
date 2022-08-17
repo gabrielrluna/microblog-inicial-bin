@@ -1,16 +1,16 @@
-<?php 
+<?php
 use Microblog\Noticia;
-use Microblog\Utilitarios;        
+use Microblog\Utilitarios;
 require_once "../inc/cabecalho-admin.php";
-
 $noticia = new Noticia;
 
-// Capturando o ID e o tipo do usuário logado e associando estes valores às propriedades do objeto "Usuário"
+/* Capturando o id e o tipo do usuário logado
+e associando estes valores às propriedades do objeto usuario */
 $noticia->usuario->setId($_SESSION['id']);
 $noticia->usuario->setTipo($_SESSION['tipo']);
+
 $listaDeNoticias = $noticia->listar();
-// Utilitarios::dump ($listaDeNoticias);
-// die ();
+// Utilitarios::dump($listaDeNoticias);
 ?>
 
 
@@ -18,7 +18,9 @@ $listaDeNoticias = $noticia->listar();
 	<article class="col-12 bg-white rounded shadow my-1 py-4">
 		
 		<h2 class="text-center">
-		Notícias <span class="badge bg-dark"><?= count($listaDeNoticias)?></span>
+		Notícias <span class="badge bg-dark">
+			<?=count($listaDeNoticias)?>
+		</span>
 		</h2>
 
 		<p class="text-center mt-5">
@@ -34,39 +36,55 @@ $listaDeNoticias = $noticia->listar();
 					<tr>
                         <th>Título</th>
                         <th>Data</th>
-						<?php if ($_SESSION['tipo'] === 'admin'){?><th>Autor</th>
-                        <th>Destaque</th>
+    					<?php if($_SESSION['tipo'] === 'admin'){ ?>
+						<th>Autor</th> 
 						<?php } ?>
-						<th class="text-center">Operações</th>
+						<th class="text-center">Destaque</th>
+						<th class="text-center" colspan="2">Operações</th>
 					</tr>
 				</thead>
 
 				<tbody>
-				<?php foreach($listaDeNoticias as $noticias){ ?>
+
+<?php foreach($listaDeNoticias as $noticia) { ?>				
 					<tr>
-                        <td> <?= $noticias['titulo']?> </td>
-                        <td> <?= Utilitarios::formataData($noticias['data'])?> </td>
-						<?php if ($_SESSION ['tipo'] === 'admin'){?>
-						<!-- ?? = Operador de Coalescência Nula
-						Na prática, o valor à esquerda é exibido (caso exista).
-						Caso contrário, o valor à direita é exibido-->
-                        <td> <?= $noticias['autor'] ?? "<i>Equipe Microblog</i>" ?> </td>
-                        <td> <?= $noticias['destaque']?> </td>
+                        <td> <?=$noticia['titulo']?> </td>
+                        <td> 
+							<?=Utilitarios::formataData($noticia['data'])?> 
+						</td>
+
+						<?php if($_SESSION['tipo'] === 'admin') { ?>
+                        <td> 
+							<!-- ?? Operador de Coalescência Nula:
+							Na prática, o valor à esquerda é exibido (desde
+							que ele exista), caso contrário o valor à direita
+						    é exibido -->
+			<?php
+			if($noticia['autor']) {
+				echo Utilitarios::limitaCaractere($noticia['autor']);
+			} else {
+				echo "<i>Equipe Microblog</i>";
+			}
+			?>
+						</td>
 						<?php } ?>
+
+						<td><?=$noticia['destaque']?></td>
+
 						<td class="text-center">
 							<a class="btn btn-warning" 
-							href="noticia-atualiza.php?id=<?=$noticias['id']?>">
+							href="noticia-atualiza.php?id=<?=$noticia['id']?>">
 							<i class="bi bi-pencil"></i> Atualizar
 							</a>
-						
+						</td>
+						<td>
 							<a class="btn btn-danger excluir" 
-							href="noticia-exclui.php">
+							href="noticia-exclui.php?id=<?=$noticia['id']?>">
 							<i class="bi bi-trash"></i> Excluir
 							</a>
 						</td>
 					</tr>
-					</tr>
-				<?php } ?>
+<?php } ?>
 				</tbody>                
 			</table>
 	</div>
@@ -78,4 +96,3 @@ $listaDeNoticias = $noticia->listar();
 <?php 
 require_once "../inc/rodape-admin.php";
 ?>
-
