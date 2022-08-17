@@ -1,3 +1,4 @@
+
 <?php 
 require_once "inc/cabecalho.php";
 ?>
@@ -37,9 +38,10 @@ require_once "inc/cabecalho.php";
         </article>
     </div>
 
-</div>        
-        
-        
+</div>     
+
+<?php include_once "inc/todas.php"; ?>           
+      
     
 
 
@@ -47,4 +49,3 @@ require_once "inc/cabecalho.php";
 <?php 
 require_once "inc/rodape.php";
 ?>
-

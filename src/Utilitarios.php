@@ -1,5 +1,6 @@
 <?php
 namespace Microblog;
+
 abstract class Utilitarios {
 
     // @autor: Marcelo
@@ -9,6 +10,10 @@ abstract class Utilitarios {
 
     public static function formataData(string $data):string {
         return date("d/m/Y H:i", strtotime($data));
+    }
+
+    public static function formataTexto(string $texto):string {
+        return nl2br($texto);
     }
 
     public static function dump($dados) {
