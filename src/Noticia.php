@@ -35,9 +35,9 @@ final class Noticia {
 
     public function inserir():void {
         $sql = "INSERT INTO noticias(titulo, texto, resumo, imagem, 
-        destaque, usuario_id, categoria_id) 
+        destaque, usuarios_id, categorias_id) 
         VALUES(:titulo, :texto, :resumo, :imagem, :destaque, 
-        :usuario_id, :categoria_id)";
+        :usuarios_id, :categorias_id)";
 
         try {
             $consulta = $this->conexao->prepare($sql);
@@ -46,14 +46,14 @@ final class Noticia {
             $consulta->bindParam(":resumo", $this->resumo, PDO::PARAM_STR);
             $consulta->bindParam(":imagem", $this->imagem, PDO::PARAM_STR);
             $consulta->bindParam(":destaque", $this->destaque, PDO::PARAM_STR);
-            $consulta->bindParam(":categoria_id", $this->categoriaId, PDO::PARAM_INT);
+            $consulta->bindParam(":categorias_id", $this->categoriaId, PDO::PARAM_INT);
 
             /* Aqui, primeiro chamamos o getter de ID a partir do objeto/classe
             de Usuario. E só depois atribuimos ele ao parâmetro :usuario_id
             usando para isso o bindValue. Obs.: bindParam pode ser usado, mas há riscos
             de erro devido a forma como ele é executado pelo PHP. Por isso, recomenda-se
             o uso do bindValue em situações como essa. */
-            $consulta->bindValue(":usuario_id", $this->usuario->getId(), PDO::PARAM_INT);
+            $consulta->bindValue(":usuarios_id", $this->usuario->getId(), PDO::PARAM_INT);
 
             $consulta->execute();
         } catch (Exception $erro) {
@@ -105,13 +105,13 @@ final class Noticia {
                     noticias.data, noticias.destaque,
                     usuarios.nome AS autor
                     FROM noticias LEFT JOIN usuarios
-                    ON noticias.usuario_id = usuarios.id
+                    ON noticias.usuarios_id = usuarios.id
                     ORDER BY data DESC";
         } else {
             /* Senão (ou seja, é um editor), este usuário (editor)
             poderá acessar SOMENTE suas próprias notícias */
             $sql = "SELECT id, titulo, data, destaque 
-                    FROM noticias WHERE usuario_id = :usuario_id
+                    FROM noticias WHERE usuarios_id = :usuarios_id
                     ORDER BY data DESC";
         }
 
@@ -122,7 +122,7 @@ final class Noticia {
             trate o parâmetro de usuario_id antes de executar */
             if ($this->usuario->getTipo() !== 'admin') {
                 $consulta->bindValue(
-                    ":usuario_id", 
+                    ":usuarios_id", 
                     $this->usuario->getId(), 
                     PDO::PARAM_INT
                 );
@@ -149,7 +149,7 @@ final class Noticia {
                     titulo, texto, resumo, imagem, 
                     usuario_id, categoria_id, destaque
                     FROM noticias 
-                    WHERE id = :id AND usuario_id = :usuario_id";
+                    WHERE id = :id AND usuarios_id = :usuarios_id";
         }
 
         try {
@@ -193,7 +193,7 @@ final class Noticia {
                     titulo = :titulo, texto = :texto, resumo = :resumo,
                     imagem = :imagem, categoria_id = :categoria_id,
                     destaque = :destaque 
-                    WHERE id = :id AND usuario_id = :usuario_id";
+                    WHERE id = :id AND usuarios_id = :usuarios_id";
         }
 
         try {
@@ -208,7 +208,7 @@ final class Noticia {
             
             if ($this->usuario->getTipo() !== 'admin') {
                 $consulta->bindValue(
-                    ":usuario_id", 
+                    ":usuarios_id", 
                     $this->usuario->getId(), 
                     PDO::PARAM_INT
                 );
@@ -225,7 +225,7 @@ final class Noticia {
             $sql = "DELETE FROM noticias WHERE id = :id";
         } else {
             $sql = "DELETE FROM noticias 
-                    WHERE id = :id AND usuario_id = :usuario_id";
+                    WHERE id = :id AND usuarios_id = :usuarios_id";
         }
 
         try {
@@ -285,7 +285,7 @@ final class Noticia {
                 noticias.texto, noticias.imagem, 
                 usuarios.nome AS autor
                 FROM noticias LEFT JOIN usuarios
-                ON noticias.usuario_id = usuarios.id
+                ON noticias.usuarios_id = usuarios.id
                 WHERE noticias.id = :id";
         try {
             $consulta = $this->conexao->prepare($sql);
@@ -307,21 +307,34 @@ final class Noticia {
                     usuarios.nome AS autor,
                     categorias.nome AS categoria
                 FROM noticias
-                    LEFT JOIN usuarios ON noticias.usuario_id = usuarios.id
-                    INNER JOIN categorias ON noticias.categoria_id = categorias.id
-                WHERE noticias.categoria_id = :categoria_id";
+                    LEFT JOIN usuarios ON noticias.usuarios_id = usuarios.id
+                    INNER JOIN categorias ON noticias.categorias_id = categorias.id
+                WHERE noticias.categorias_id = :categorias_id";
         
         try {
             $consulta = $this->conexao->prepare($sql);
-            $consulta->bindParam(":categoria_id", $this->categoriaId, PDO::PARAM_INT);
+            $consulta->bindParam(":categorias_id", $this->categoriaId, PDO::PARAM_INT);
             $consulta->execute();
-            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+            $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $erro) {
             die("Erro: ". $erro->getMessage());
         }
         return $resultado;
     }
 
+    public function busca():array{
+        $sql = "SELECT titulo, data, resumo, id FROM noticias WHERE titulo LIKE :termo OR texto LIKE :termo OR resumo LIKE :termo ORDER BY data DESC";
+    
+        try {
+            $consulta = $this->conexao->prepare($sql);
+            $consulta->bindValue(":termo", '%'.$this->termo.'%', PDO::PARAM_STR);
+            $consulta->execute();
+            $resultado = $consulta -> fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $erro) {
+            die("Erro: ". $erro->getMessage());
+        }
+        return $resultado;
+    }
     /* 
     try {
             
@@ -419,5 +432,15 @@ final class Noticia {
     public function setId(int $id)
     {
         $this->id = $id;
+    }
+
+    public function getTermo(): string
+    {
+        return $this->termo;
+    }
+
+    public function setTermo(string $termo)
+    {
+        $this->termo = $termo;
     }
 }

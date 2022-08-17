@@ -1,5 +1,8 @@
 <?php
+/* Inicialização do Output Buffer
+Gerenciamento da memória de saídas/redirecionamentos */
 ob_start();
+
 use Microblog\Categoria;
 use Microblog\Noticia;
 require_once "vendor/autoload.php"; 
@@ -14,8 +17,11 @@ $listaDeCategorias = $categoria->listar();
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Microblog</title>
-<link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="vendor/twbs/bootstrap-icons/font/bootstrap-icons.css">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="d-flex flex-column h-100">
@@ -56,8 +62,8 @@ $listaDeCategorias = $categoria->listar();
         </li>
       </ul>
 
-      <form autocomplete="off" class="d-flex" action="resultados.php" method="POST">
-        <input class="form-control me-2" type="search" placeholder="Pesquise aqui" aria-label="Pesquise aqui">
+      <form autocomplete="off" class="d-flex" action="resultados.php" method="GET">
+        <input name="busca" class="form-control me-2" type="search" placeholder="Pesquise aqui" aria-label="Pesquise aqui">
         <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">OK</button>
       </form>
     </div>

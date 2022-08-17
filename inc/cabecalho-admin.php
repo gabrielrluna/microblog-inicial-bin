@@ -1,17 +1,16 @@
 <?php
 ob_start();
-
 use Microblog\ControleDeAcesso;
 require_once "../vendor/autoload.php";
 
-// Criamos o objetio para acessar os recursos de sessao PHP na classe ControleDeAcesso
+// Criamos objeto para acessar os recursos de sessão PHP na classe ControleDeAcesso
 $sessao = new ControleDeAcesso;
-// Executamos verificaAcesso para checar se tem alguém logado 
+
+// Executamos verificaAcesso para checar se tem alguém logado
 $sessao->verificaAcesso();
 
-// Se o parametro "?sair" existir, entao faça o logout
+// Se o parâmetro ?sair existir, então faça o logout
 if(isset($_GET['sair'])) $sessao->logout();
-
 
 $pagina = basename($_SERVER['PHP_SELF']);
 ?>
@@ -22,8 +21,11 @@ $pagina = basename($_SERVER['PHP_SELF']);
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Microblog</title>
-<link rel="stylesheet" href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+
 <link rel="stylesheet" href="../css/style.css">
 
 </head>
@@ -41,57 +43,32 @@ $pagina = basename($_SERVER['PHP_SELF']);
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <?php
-        if($_SESSION['tipo'] == 'admin'){
-            ?>
             <li class="nav-item">
                 <a class="nav-link" href="index.php">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="meu-perfil.php">Meu perfil</a>
             </li>
+            <?php if( $_SESSION['tipo'] === 'admin' ){ ?>
             <li class="nav-item">
                 <a class="nav-link" href="categorias.php">Categorias</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="noticias.php">Notícias</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="usuarios.php">Usuários</a>
             </li>
+            <?php } ?>
 
-            <li class="nav-item">
-                <a class="nav-link" href="../index.php" target="_blank">Área pública</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link fw-bold" href="?sair"> <i class="bi bi-x-circle"></i> Sair</a>
-            </li>
-
-            <?php
-        } else {
-            ?>
-
-            <li class="nav-item">
-                <a class="nav-link" href="index.php">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="meu-perfil.php">Meu perfil</a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" href="noticias.php">Notícias</a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="../index.php" target="_blank">Área pública</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link fw-bold" href="?sair"> <i class="bi bi-x-circle"></i> Sair</a>
             </li>
-
-          <?php
-            }
-            ?>
         </ul>
-
 
     </div>
   </div>
