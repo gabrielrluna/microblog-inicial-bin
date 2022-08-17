@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use Microblog\Categoria;
 use Microblog\Noticia;
 require_once "vendor/autoload.php"; 
